@@ -11,7 +11,7 @@ import { join } from 'path';
 import 'dotenv/config';
 import { assert } from 'console';
 
-const FRC_API_KEY = process.env.FRC_API_KEY as string;
+const FRC_API_KEY = Buffer.from(process.env.FRC_API_KEY as string).toString('base64');
 assert(FRC_API_KEY, 'Missing FRC API key.');
 
 export class FIRSTScraperStack extends Stack {
