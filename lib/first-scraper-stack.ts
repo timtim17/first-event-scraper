@@ -15,7 +15,7 @@ dotenv.config();
 const FRC_API_KEY = process.env.FRC_API_KEY as string;
 assert(FRC_API_KEY, 'Missing FRC API key.');
 
-export class FirstSchedulePanelStack extends Stack {
+export class FIRSTScraperStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
@@ -26,6 +26,7 @@ export class FirstSchedulePanelStack extends Stack {
     const table = new dynamodb.Table(this, 'EventDB', {
         partitionKey: { name: 'EventKey', type: dynamodb.AttributeType.STRING },
         sortKey: { name: 'MatchNum', type: dynamodb.AttributeType.NUMBER },
+        // sortKey: { name: 'MatchId', type: dynamodb.AttributeType.STRING },
         billingMode: dynamodb.BillingMode.PROVISIONED,
         readCapacity: 5,    // TODO: actually figure out proper numbers
         writeCapacity: 2,
@@ -36,6 +37,7 @@ export class FirstSchedulePanelStack extends Stack {
         entry: join(__dirname, '../src/lambda/index.ts'),
         environment: {
             FRC_API_KEY,
+            TABLE_NAME: table.tableName,
         },
         role: iamRole,
         logRetention: logs.RetentionDays.ONE_WEEK,
